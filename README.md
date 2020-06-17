@@ -11,4 +11,4 @@
 7. Search
 8. Sort
 9. Stack, Queue & Dequq
-10. Pattern Matching
+10. Pattern Printing

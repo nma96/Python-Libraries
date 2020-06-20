@@ -42,6 +42,7 @@ def PatternMatch(String):
     # Values list will store indexes of all the matched values as a (start, end) tupple
     values = []
     for match in matches:
+        # match.start() + 1 to avoid the $ sign at the start of the string
         values.append((match.start()+1, match.end()))
 
     # Edge case check if there are no values that match
@@ -53,20 +54,29 @@ def PatternMatch(String):
 
     # The below for loop is replacing those values with the reduced values
     for value in values:
+        # "Before" is the value before convertion
         before = String[value[0]:value[1]]
-        after = reduceBy10(float(String[value[0]:value[1]]))
+        #Convert the "Before" value into the new converted value
+        newValue = reduceBy10(float(before))
         
-        result = result.replace(before, after)
+        # Replace the before value with new value
+        result = result.replace(before, newValue)
 
     return result
 
 def reduceBy10(number):
-    # Perform the 10% deduction and return the number with exactly 2 digits after the decimal point
+    # returns the number*90% with exactly 2 digits after the decimal point
     return '%.2f' % float(number*0.9)
 
 
 def main():
     inputText = input("Enter the String: ")
+
+    #Edge Case check:
+
+    if inputText is None or len(inputText)==0:
+        return inputText
+
     print("String after Reduction: " + PatternMatch(inputText))
 
 if __name__ == '__main__':

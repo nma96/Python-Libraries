@@ -25,17 +25,49 @@
 
 import re
 
-inputText = '''Alice spent $10.00 this week and $12.00 the next week'''
 
-# RegEx: Find literal [$] followed by 1 or more digits [0-9](+) 
-    # followed by literal [.] followed by 2 digits (\d{2}) and word break(\b)
-pattern = re.compile(r'[$][0-9]+[.]\d{2}\b')
-# Above regular expression finds all the dollar values. 
-# To add compatibility to other currencies, add those currencies
-    # to the first bracket in the below expression
+def PatternMatch(String):
 
-matches = pattern.finditer(inputText)
+    # RegEx: Find literal [$] followed by 1 or more digits [0-9](+) 
+        # followed by literal [.] followed by 2 digits (\d{2}) and word break(\b)
+    pattern = re.compile(r'[$][0-9]+[.]\d{2}\b')
+    # Above regular expression finds all the dollar values. 
+    # To add compatibility to other currencies, add those currencies
+        # to the first bracket in the below expression
 
-for match in matches:
-    print(match)
 
+    # finditer finds all the occurances of the RegEx and 
+    matches = pattern.finditer(String)
+
+    # Values list will store indexes of all the matched values as a (start, end) tupple
+    values = []
+    for match in matches:
+        values.append((match.start()+1, match.end()))
+
+    # Edge case check if there are no values that match
+    if values == [] or values is None:
+        return String
+
+    # Creating a copy of the string which will be returned with new values
+    result = String
+
+    # The below for loop is replacing those values with the reduced values
+    for value in values:
+        before = String[value[0]:value[1]]
+        after = reduceBy10(float(String[value[0]:value[1]]))
+        
+        result = result.replace(before, after)
+
+    return result
+
+def reduceBy10(number):
+    # Perform the 10% deduction and return the number with exactly 2 digits after the decimal point
+    return '%.2f' % float(number*0.9)
+
+
+def main():
+    inputText = input("Enter the String: ")
+    print("String after Reduction: " + PatternMatch(inputText))
+
+if __name__ == '__main__':
+    main()
